@@ -10,7 +10,7 @@ export async function createRecord(collection, payload) {
         response = await response.json()
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return []
     }
 }
@@ -26,7 +26,7 @@ export async function createMultipartRecord(collection, payload) {
         response = await response.json()
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return []
     }
 }
@@ -43,7 +43,7 @@ export async function getRecord(collection) {
         response = await response.json()
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return []
     }
 }
@@ -60,7 +60,7 @@ export async function updateRecord(collection, payload) {
         response = await response.json()
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return []
     }
 }
@@ -76,7 +76,7 @@ export async function updateMultipartRecord(collection, payload) {
         response = await response.json()
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return []
     }
 }
@@ -93,7 +93,7 @@ export async function deleteRecord(collection, payload) {
         response = await response.json()
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return []
     }
 }

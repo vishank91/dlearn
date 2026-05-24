@@ -9,8 +9,8 @@ import SignupPage from "../screens/Authentication/SignupPage"
 export default function AuthenticationNavigation() {
     return (
         <RootNavigation.Navigator>
-            <RootNavigation.Screen name='login' component={LoginPage} />
-            <RootNavigation.Screen name='signup' component={SignupPage} />
+            <RootNavigation.Screen name='login' component={LoginPage} options={{headerShown:false}} />
+            <RootNavigation.Screen name='signup' component={SignupPage} options={{headerShown:false}} />
         </RootNavigation.Navigator>
     )
 }
