@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native"
-
+import React, { useEffect, useState } from 'react'
+import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native"
 import { GraduationCap, Eye, EyeOff } from "lucide-react-native"
+
+import { useDispatch, useSelector } from 'react-redux'
+
+import FormValidator from "../../Validators/FormValidator"
+
+import { createUser, getUser } from "../../redux/ActionCreators/UserActionCreators"
 const mystyle = {
     main: {
         backgroundColor: "#dcdcde",
         height: "100%",
-        width: "100%"
+        width: "100%",
+        marginTop: "30px"
     },
     first: {
         width: "100%",
@@ -43,17 +49,32 @@ const mystyle = {
     },
     second: {
         padding: 20,
-        position: "relative"
     },
     input: {
         backgroundColor: "white",
         padding: 20,
         borderRadius: 20,
-        marginBottom: 20
+    },
+    inputError: {
+        backgroundColor: "white",
+        padding: 20,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: "red"
+    },
+    inputDiv: {
+        marginBottom: 10,
+    },
+    passwordDiv: {
+        position: "relative"
+    },
+    errorMessage: {
+        marginLeft: 10,
+        color: "red"
     },
     showHideIcon: {
         position: "absolute",
-        bottom: 188,
+        bottom: 12,
         right: 50
     },
     loginButton: {
@@ -90,17 +111,58 @@ export default function SignPage({ navigation }) {
     })
     let [show, setShow] = useState(false)
 
+    let dispatch = useDispatch()
+    let UserStateData = useSelector(state => state.UserStateData)
+
+
+    useEffect(() => {
+        (() => {
+            dispatch(getUser())
+            Alert.alert("Error",UserStateData.length?.toString())
+        })()
+    }, [UserStateData.length])
+
+
     function getInputData(key, value) {
         setData({ ...data, [key]: value })
+        setErrorMessage({ ...errorMessage, [key]: FormValidator(key, value) })
     }
 
     function postData() {
-        Alert.alert(`Input`, `
-            Name : ${data.name}
-            Password : ${data.password}`)
+        let error = Object.values(errorMessage).find(x => x !== "")
+        if (error)
+            setShow(true)
+        else if (data.password !== data.cpassword) {
+            setShow(true)
+            setErrorMessage({ ...errorMessage, password: "Password and Condirm Password Doesn't Matched" })
+        }
+        else {
+            let item = UserStateData.find(x => x.username?.toLowerCase() === data.username?.toLowerCase() || x.email?.toLowerCase() === data.email?.toLowerCase())
+            if (item) {
+                setShow(true)
+                setErrorMessage({
+                    ...errorMessage,
+                    username: item.username?.toLowerCase() === data.username?.toLowerCase() ? "Username Already Taken" : "",
+                    email: item.email?.toLowerCase() === data.email?.toLowerCase() ? "Email Address Already Taken" : ""
+                })
+            }
+            else {
+                dispatch(createUser({
+                    name: data.name,
+                    username: data.username,
+                    email: data.email,
+                    phone: data.phone,
+                    password: data.password,
+                    role: "Student",
+                    status: true
+                }))
+                navigation.navigate("login")
+            }
+        }
     }
+
     return (
-        <View style={mystyle.main}>
+        <ScrollView style={mystyle.main}>
             <View style={mystyle.first}>
                 <View style={mystyle.center}>
                     <View style={mystyle.circle}><GraduationCap size={70} color="white"></GraduationCap></View>
@@ -108,16 +170,37 @@ export default function SignPage({ navigation }) {
                 </View>
             </View>
             <View style={mystyle.second}>
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('name', text)} placeholder='Full Name' />
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('username', text)} placeholder='Username' />
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('email', text)} placeholder='Email Address' />
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('phone', text)} placeholder='Phone Number' />
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('password', text)} secureTextEntry={!showPassword} placeholder='Enter Password'  ></TextInput>
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('cpassword', text)} secureTextEntry={!showPassword} placeholder='Confirm Password'  ></TextInput>
-                {showPassword ?
-                    <EyeOff color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(false)} size={40}></EyeOff> :
-                    <Eye color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(true)} size={40}></Eye>
-                }
+                <View style={mystyle.inputDiv}>
+                    <TextInput style={show && errorMessage.name ? mystyle.inputError : mystyle.input} keyboardType='default' onChangeText={text => getInputData('name', text)} placeholder='Full Name' />
+                    {show && errorMessage.name ? <Text style={mystyle.errorMessage}>{errorMessage.name}</Text> : null}
+                </View>
+                <View style={mystyle.inputDiv}>
+                    <TextInput style={show && errorMessage.username ? mystyle.inputError : mystyle.input} keyboardType='default' onChangeText={text => getInputData('username', text)} placeholder='Username' />
+                    {show && errorMessage.username ? <Text style={mystyle.errorMessage}>{errorMessage.username}</Text> : null}
+                </View>
+                <View style={mystyle.inputDiv}>
+                    <TextInput style={show && errorMessage.email ? mystyle.inputError : mystyle.input} keyboardType='email-address' onChangeText={text => getInputData('email', text)} placeholder='Email Address' />
+                    {show && errorMessage.email ? <Text style={mystyle.errorMessage}>{errorMessage.email}</Text> : null}
+                </View>
+                <View style={mystyle.inputDiv}>
+                    <TextInput style={show && errorMessage.phone ? mystyle.inputError : mystyle.input} keyboardType='phone-pad' onChangeText={text => getInputData('phone', text)} placeholder='Phone Number' />
+                    {show && errorMessage.phone ? <Text style={mystyle.errorMessage}>{errorMessage.phone}</Text> : null}
+                </View>
+                <View style={mystyle.inputDiv}>
+                    <View style={mystyle.passwordDiv}>
+                        <TextInput style={show && errorMessage.password ? mystyle.inputError : mystyle.input} onChangeText={text => getInputData('password', text)} secureTextEntry={!showPassword} placeholder='Enter Password'  ></TextInput>
+                        {showPassword ?
+                            <EyeOff color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(false)} size={40}></EyeOff> :
+                            <Eye color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(true)} size={40}></Eye>
+                        }
+                    </View>
+                    {show && errorMessage.password ? errorMessage.password.split("|").map((error, index) => {
+                        return <Text style={mystyle.errorMessage} key={index}>{error}</Text>
+                    }) : null}
+                </View>
+                <View style={mystyle.inputDiv}>
+                    <TextInput style={show && errorMessage.password ? mystyle.inputError : mystyle.input} onChangeText={text => getInputData('cpassword', text)} secureTextEntry={!showPassword} placeholder='Confirm Password'  ></TextInput>
+                </View>
                 <TouchableOpacity style={mystyle.loginButton} onPress={postData}>
                     <Text style={mystyle.loginButtonText}>Signup</Text>
                 </TouchableOpacity>
@@ -125,6 +208,6 @@ export default function SignPage({ navigation }) {
             <TouchableOpacity onPress={() => navigation.navigate("login")}>
                 <Text style={mystyle.bottomButtonText}>Already Have an Account? Login</Text>
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     )
 }

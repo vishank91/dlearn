@@ -41,6 +41,7 @@ export async function getRecord(collection) {
             }
         })
         response = await response.json()
+        console.log(response)
         return response
     } catch (error) {
         // console.log(error)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native"
+import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native"
 
 import { GraduationCap, Eye, EyeOff } from "lucide-react-native"
 const mystyle = {
@@ -91,10 +91,11 @@ export default function LoginPage({ navigation }) {
     function postData() {
         Alert.alert(`Input`, `
             Name : ${data.name}
-            Password : ${data.password}`)
+            Password : ${data.password}
+            `)
     }
     return (
-        <View style={mystyle.main}>
+        <ScrollView style={mystyle.main}>
             <Text style={mystyle.mainText}>DLEARN</Text>
             <View style={mystyle.first}>
                 <View style={mystyle.center}>
@@ -122,6 +123,6 @@ export default function LoginPage({ navigation }) {
                     <Text style={mystyle.bottomButtonText}>Doesn't Have an Account? Signup</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     )
 }
