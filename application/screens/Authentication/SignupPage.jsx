@@ -118,7 +118,6 @@ export default function SignPage({ navigation }) {
     useEffect(() => {
         (() => {
             dispatch(getUser())
-            Alert.alert("Error",UserStateData.length?.toString())
         })()
     }, [UserStateData.length])
 

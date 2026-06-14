@@ -1,7 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native"
+import { useDispatch, useSelector } from 'react-redux'
+
+import Storage from "@react-native-async-storage/async-storage";
 
 import { GraduationCap, Eye, EyeOff } from "lucide-react-native"
+import { getUser } from "../../redux/ActionCreators/UserActionCreators"
+
+import { userLogin } from "../../redux/ActionCreators/UserAuthCreators"
 const mystyle = {
     main: {
         backgroundColor: "#dcdcde",
@@ -41,6 +47,10 @@ const mystyle = {
         fontWeight: "bolder",
         color: "#0055a5"
     },
+    errorMessage: {
+        marginLeft: 10,
+        color: "red"
+    },
     second: {
         padding: 20,
         position: "relative"
@@ -49,11 +59,16 @@ const mystyle = {
         backgroundColor: "white",
         padding: 20,
         borderRadius: 20,
-        marginBottom: 20
+    },
+    inputDiv: {
+        marginBottom: 10,
+    },
+    passwordDiv: {
+        position: "relative"
     },
     showHideIcon: {
         position: "absolute",
-        top: 110,
+        bottom: 12,
         right: 50
     },
     loginButton: {
@@ -79,20 +94,43 @@ const mystyle = {
 }
 export default function LoginPage({ navigation }) {
     let [showPassword, setShowPassword] = useState(false)
+    let [errorMessage, setErrorMessage] = useState("")
+
+    let dispatch = useDispatch()
+    let UserStateData = useSelector(state => state.UserStateData)
+
     let [data, setData] = useState({
         username: "",
         password: ""
     })
+    useEffect(() => {
+        (async () => {
+            dispatch(getUser())
+            if (await Storage.getItem("login") === "true") {
+                let userid = await Storage.getItem("userid")
+                let item = UserStateData.find(x => x.id === userid)
+                dispatch(userLogin({ ...item }))
+            }
+        })()
+    }, [UserStateData.length])
+
 
     function getInputData(key, value) {
         setData({ ...data, [key]: value })
     }
 
-    function postData() {
-        Alert.alert(`Input`, `
-            Name : ${data.name}
-            Password : ${data.password}
-            `)
+    async function postData() {
+        let item = UserStateData.find(x => x.username === data.username && x.password === data.password)
+        if (item) {
+            await Storage.setItem("login", "true")
+            await Storage.setItem("name", item.name)
+            await Storage.setItem("userid", item.id)
+            await Storage.setItem("role", item.role)
+            dispatch(userLogin({ ...item }))
+        }
+        else {
+            setErrorMessage("Invalid Userename or Password")
+        }
     }
     return (
         <ScrollView style={mystyle.main}>
@@ -104,13 +142,20 @@ export default function LoginPage({ navigation }) {
                 </View>
             </View>
             <View style={mystyle.second}>
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('username', text)} placeholder='Username' />
-                <TextInput style={mystyle.input} onChangeText={text => getInputData('password', text)} secureTextEntry={!showPassword} placeholder='Password'  >
-                </TextInput>
-                {showPassword ?
-                    <EyeOff color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(false)} size={40}></EyeOff> :
-                    <Eye color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(true)} size={40}></Eye>
-                }
+                <View style={mystyle.inputDiv}>
+                    <TextInput style={mystyle.input} onChangeText={text => getInputData('username', text)} placeholder='Username' />
+                    {errorMessage ? <Text style={mystyle.errorMessage}>{errorMessage}</Text> : null}
+                </View>
+                <View style={mystyle.inputDiv}>
+                    <View style={mystyle.passwordDiv}>
+                        <TextInput style={mystyle.input} onChangeText={text => getInputData('password', text)} secureTextEntry={!showPassword} placeholder='Password'  >
+                        </TextInput>
+                        {showPassword ?
+                            <EyeOff color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(false)} size={40}></EyeOff> :
+                            <Eye color="#0055a5" style={mystyle.showHideIcon} onPress={() => setShowPassword(true)} size={40}></Eye>
+                        }
+                    </View>
+                </View>
                 <TouchableOpacity style={mystyle.loginButton} onPress={postData}>
                     <Text style={mystyle.loginButtonText}>Login</Text>
                 </TouchableOpacity>

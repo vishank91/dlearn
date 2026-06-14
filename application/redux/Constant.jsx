@@ -8,3 +8,7 @@ export const UPDATE_USER_RED = "UPDATE_USER_RED"
 export const DELETE_USER = "DELETE_USER"
 export const DELETE_USER_RED = "DELETE_USER_RED"
 
+//User Login and Logout
+export const USER_LOGIN_RED = "USER_LOGIN_RED"
+export const USER_LOGOUT_RED = "USER_LOGOUT_RED"
+

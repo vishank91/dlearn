@@ -29,7 +29,7 @@ function* deleteSaga(action) {
 }
 
 
-export function* UserSagas() {
+export default function* UserSagas() {
     yield takeEvery(CREATE_USER, createSaga)
     yield takeEvery(GET_USER, getSaga)
     yield takeEvery(UPDATE_USER, updateSaga)
