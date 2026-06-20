@@ -1,10 +1,16 @@
 import React from 'react'
-import { ScrollView, Text } from 'react-native'
 
-export default function AdminTeacherHomePage() {
-     return (
-          <ScrollView>
-               <Text>Admin Teacher Home Page</Text>
-          </ScrollView>
-     )
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+
+const RootNavigation = createNativeStackNavigator()
+
+import HomePage from "./Screens/HomePage"
+import CreatePage from "./Screens/CreatePage"
+export default function AuthenticationNavigation() {
+    return (
+        <RootNavigation.Navigator>
+            <RootNavigation.Screen name='home' component={HomePage} options={{headerShown:false}} />
+            <RootNavigation.Screen name='create' component={CreatePage} options={{headerShown:false}} />
+        </RootNavigation.Navigator>
+    )
 }

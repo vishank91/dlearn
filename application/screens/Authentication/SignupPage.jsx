@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native"
+import { ScrollView, View, Text, TextInput, TouchableOpacity } from "react-native"
 import { GraduationCap, Eye, EyeOff } from "lucide-react-native"
 
 import { useDispatch, useSelector } from 'react-redux'
