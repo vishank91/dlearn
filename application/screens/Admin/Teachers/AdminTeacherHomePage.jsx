@@ -6,11 +6,13 @@ const RootNavigation = createNativeStackNavigator()
 
 import HomePage from "./Screens/HomePage"
 import CreatePage from "./Screens/CreatePage"
-export default function AuthenticationNavigation() {
+import UpdatePage from "./Screens/UpdatePage"
+export default function AdminTeacherHomePage() {
     return (
         <RootNavigation.Navigator>
             <RootNavigation.Screen name='home' component={HomePage} options={{headerShown:false}} />
             <RootNavigation.Screen name='create' component={CreatePage} options={{headerShown:false}} />
+            <RootNavigation.Screen name='update' component={UpdatePage} options={{headerShown:false}} />
         </RootNavigation.Navigator>
     )
 }

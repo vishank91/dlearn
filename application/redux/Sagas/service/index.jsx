@@ -44,9 +44,9 @@ export async function getRecord(collection) {
         // console.log(response)
         return response
     } catch (error) {
-        console.log(error)
-        // return []
-        throw error
+        // console.log(error)
+        return []
+        // throw error
     }
 }
 

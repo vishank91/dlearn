@@ -89,14 +89,14 @@ export default function HomePage({ navigation }) {
           (() => {
                dispatch(getUser())
                if (UserStateData.length) {
-                    setData(UserStateData.filter(x => x.role === "Teacher"))
+                    setData(UserStateData.filter(x => x.role === "Admin" || x.role==="Super Admin"))
                }
           })()
      }, [UserStateData.length])
      return (
           <>
                <TouchableOpacity style={myStyle.mainButton} onPress={() => navigation.navigate("create")}>
-                    <Text style={myStyle.mainButtonText}>Add Teacher</Text>
+                    <Text style={myStyle.mainButtonText}>Add Admin Record</Text>
                </TouchableOpacity>
                <ScrollView>
                     {data.map(item => {
@@ -121,10 +121,11 @@ export default function HomePage({ navigation }) {
                                    <Text style={myStyle.text1}>Email</Text>
                                    <Text style={myStyle.text2}>{item.email}</Text>
                               </View>
+                              <View style={myStyle.mainDiv}>
+                                   <Text style={myStyle.text1}>Role</Text>
+                                   <Text style={myStyle.text2}>{item.role}</Text>
+                              </View>
                               <View style={myStyle.buttonDiv}>
-                                   <TouchableOpacity style={{ ...myStyle.button, backgroundColor: "green" }}>
-                                        <Text><Eye size={20} color={"white"} /></Text> <Text style={{ ...myStyle.buttonText }}>View Class</Text>
-                                   </TouchableOpacity>
                                    <TouchableOpacity style={myStyle.button} onPress={() => navigation.navigate("update", { id: item.id })}>
                                         <Text><PenBox size={20} color={"white"} /></Text> <Text style={myStyle.buttonText}>Edit</Text>
                                    </TouchableOpacity>

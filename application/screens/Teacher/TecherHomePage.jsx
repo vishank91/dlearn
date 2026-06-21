@@ -1,10 +1,10 @@
 import React from 'react'
 import { ScrollView, Text } from 'react-native'
 
-export default function TecherHomePage() {
+export default function TeacherHomePage() {
      return (
           <ScrollView>
-               <Text>Techer Home Page</Text>
+               <Text>Teacher Home Page</Text>
           </ScrollView>
      )
 }
