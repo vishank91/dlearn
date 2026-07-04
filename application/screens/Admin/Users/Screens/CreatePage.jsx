@@ -158,6 +158,7 @@ export default function CreatePage({ navigation }) {
                          email: data.email,
                          phone: data.phone,
                          password: data.password,
+                         role:data.role,
                          status: true
                     }))
                     navigation.navigate("home")

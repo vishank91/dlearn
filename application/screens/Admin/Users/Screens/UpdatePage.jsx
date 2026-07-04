@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ScrollView, View, Text, TextInput, TouchableOpacity } from "react-native"
 
+import { Picker } from '@react-native-picker/picker'
 
 import { useDispatch, useSelector } from 'react-redux'
 import FormValidator from "../../../../Validators/FormValidator"
@@ -105,6 +106,7 @@ export default function UpdatePage({ navigation, route }) {
           username: "",
           email: "",
           phone: "",
+          role: ""
      })
      let [errorMessage, setErrorMessage] = useState({
           name: "",
@@ -149,7 +151,7 @@ export default function UpdatePage({ navigation, route }) {
                     })
                }
                else {
-                    dispatch(updateUser({...data}))
+                    dispatch(updateUser({ ...data }))
                     navigation.navigate("home")
                }
           }
@@ -176,6 +178,12 @@ export default function UpdatePage({ navigation, route }) {
                     <View style={myStyle.inputDiv}>
                          <TextInput value={data.phone} style={show && errorMessage.phone ? myStyle.inputError : myStyle.input} keyboardType='phone-pad' onChangeText={text => getInputData('phone', text)} placeholder='Phone Number' />
                          {show && errorMessage.phone ? <Text style={myStyle.errorMessage}>{errorMessage.phone}</Text> : null}
+                    </View>
+                    <View style={myStyle.inputDiv}>
+                         <Picker selectedValue={data.role} onValueChange={(itemValue) => setData({ ...data, role: itemValue })}>
+                              <Picker.item label="Admin" value="Admin" />
+                              <Picker.item label="Super Admin" value="Super Admin" />
+                         </Picker>
                     </View>
                     <TouchableOpacity style={myStyle.createButton} onPress={postData}>
                          <Text style={myStyle.createButtonText}>Update</Text>

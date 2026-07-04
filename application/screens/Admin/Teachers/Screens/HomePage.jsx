@@ -99,8 +99,8 @@ export default function HomePage({ navigation }) {
                     <Text style={myStyle.mainButtonText}>Add Teacher</Text>
                </TouchableOpacity>
                <ScrollView>
-                    {data.map(item => {
-                         return <View style={myStyle.parentDiv} key={item.id} >
+                    {data.map((item, index) => {
+                         return <View style={myStyle.parentDiv} key={index} >
                               <View style={myStyle.mainDiv}>
                                    <Text style={myStyle.text1}>Id</Text>
                                    <Text style={myStyle.text2}>{item.id}</Text>
@@ -123,13 +123,16 @@ export default function HomePage({ navigation }) {
                               </View>
                               <View style={myStyle.buttonDiv}>
                                    <TouchableOpacity style={{ ...myStyle.button, backgroundColor: "green" }}>
-                                        <Text><Eye size={20} color={"white"} /></Text> <Text style={{ ...myStyle.buttonText }}>View Class</Text>
+                                        <Eye size={20} color={"white"} />
+                                        <Text style={{ ...myStyle.buttonText }}>View Class</Text>
                                    </TouchableOpacity>
                                    <TouchableOpacity style={myStyle.button} onPress={() => navigation.navigate("update", { id: item.id })}>
-                                        <Text><PenBox size={20} color={"white"} /></Text> <Text style={myStyle.buttonText}>Edit</Text>
+                                        <PenBox size={20} color={"white"} />
+                                        <Text style={myStyle.buttonText}>Edit</Text>
                                    </TouchableOpacity>
                                    <TouchableOpacity onPress={() => deleteRecord(item.id)} style={{ ...myStyle.button, backgroundColor: "red" }}>
-                                        <Text><Trash size={20} color={"white"} /></Text> <Text style={{ ...myStyle.buttonText }}>Delete</Text>
+                                        <Trash size={20} color={"white"} />
+                                        <Text style={{ ...myStyle.buttonText }}>Delete</Text>
                                    </TouchableOpacity>
                               </View>
                          </View>

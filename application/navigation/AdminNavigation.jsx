@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { House, LogOut, Warehouse, UserRoundPen, UserStar, UsersRoundIcon } from "lucide-react-native"
+import Storage from '@react-native-async-storage/async-storage'
+
 
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -16,9 +18,15 @@ const DrawerNavigation = createDrawerNavigator()
 const TabNavigation = createBottomTabNavigator()
 
 function AdminTabs() {
+    let [role, setRole] = useState("Admin")
+    useEffect(()=>{
+        (async()=>{
+            setRole(await Storage.getItem("role"))
+        })()
+    },[])
     return (
         <TabNavigation.Navigator screenOptions={({ route }) => ({
-            headerShown:false,
+            headerShown: false,
             tabBarIcon: ({ color, size }) => {
                 if (route.name === "Home")
                     return <House color={color} size={size} />
@@ -26,7 +34,7 @@ function AdminTabs() {
                     return <UserRoundPen color={color} size={size} />
                 if (route.name === "Student")
                     return <UserStar color={color} size={size} />
-                if (route.name === "User")
+                if (role==="Super Admin" && route.name === "User")
                     return <UsersRoundIcon color={color} size={size} />
                 if (route.name === "Logout")
                     return <LogOut color={color} size={size} />
