@@ -109,7 +109,8 @@ export default function LoginPage({ navigation }) {
             if (await Storage.getItem("login") === "true") {
                 let userid = await Storage.getItem("userid")
                 let item = UserStateData.find(x => x.id === userid)
-                dispatch(userLogin({ ...item }))
+                if (item)
+                    dispatch(userLogin({ ...item }))
             }
         })()
     }, [UserStateData.length])

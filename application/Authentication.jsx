@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavigationContainer } from "@react-navigation/native"
 import { useSelector } from 'react-redux'
 
 import AuthenticationNavigation from "./navigation/AuthenticationNavigation"
 import AdminNavigation from "./navigation/AdminNavigation"
 import TeacherNavigation from "./navigation/TeacherNavigation"
+import { Alert } from 'react-native'
 
 export default function Authentication() {
      let UserAuthData = useSelector(state => state.UserAuthData)

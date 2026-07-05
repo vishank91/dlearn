@@ -50,5 +50,16 @@ export default function FormValidator(name, value) {
                     return schema.validate(value, { details: true }).map(x => x.message?.replaceAll("string", "password"))?.join("|")
                else
                     return ""
+
+          case "description":
+               if (!value || value.length === 0)
+                    return name + " Field is Mendatory"
+               else if (value.length < 50)
+                    return name + " Field Length Must Be More The or Equal to 50 Characters"
+               else
+                    return ""
+
+          default:
+               return ""
      }
 }
