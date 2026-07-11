@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, View, Text, TextInput, TouchableOpacity } from "react-native"
+import { ScrollView, View, Text, TextInput, TouchableOpacity, Alert } from "react-native"
 
 import Storage from "@react-native-async-storage/async-storage";
 
 import { useDispatch, useSelector } from 'react-redux'
 import FormValidator from "../../../../Validators/FormValidator"
-import { createClass, getClass } from "../../../../redux/ActionCreators/ClassActionCreators"
+import { updateClass, getClass } from "../../../../redux/ActionCreators/ClassActionCreators"
 const myStyle = {
      mainButton: {
           backgroundColor: "#0055a5",
@@ -60,14 +60,12 @@ const myStyle = {
           textAlign: "center"
      }
 }
-export default function CreatePage({ navigation }) {
+export default function JoinPage({ navigation }) {
      let [data, setData] = useState({
-          name: "",
-          description: ""
+          classId: ""
      })
      let [errorMessage, setErrorMessage] = useState({
-          name: "Name Field is Mendatory",
-          description: "Description Field is Mendatory"
+          classId: "Class Id Field is Mendatory",
      })
      let [show, setShow] = useState(false)
 
@@ -92,24 +90,21 @@ export default function CreatePage({ navigation }) {
           if (error)
                setShow(true)
           else {
-               let teacherId = await Storage.getItem("userid")
-               let item = ClassStateData.find((x) => x.name?.toLowerCase() === data.name?.toLowerCase() && x.teacher === teacherId)
-               if (item) {
-                    setShow(true)
-                    setErrorMessage({
-                         ...errorMessage,
-                         name: "Class With This Name Already Exist"
-                    })
+               let item = ClassStateData.find((x) => x.id === data.classId)
+               let studentId = await Storage.getItem("userid")
+               let record = {
+                    student: studentId,
+                    status: "Pending"
                }
-               else {
-                    dispatch(createClass({
-                         name: data.name,
-                         description: data.description,
-                         teacher: await Storage.getItem("userid"),
-                         status: true
+               if (item) {
+                    dispatch(updateClass({
+                         ...item,
+                         student: Object.hasOwn(item, 'student') ? item.student.push(record) : [{ ...record }]
                     }))
                     navigation.navigate("home")
                }
+               else
+                    Alert.alert("Error", "Class Doesn't Exist, Please Enter Correct Class ID")
           }
      }
 
@@ -123,12 +118,8 @@ export default function CreatePage({ navigation }) {
                          <TextInput style={show && errorMessage.name ? myStyle.inputError : myStyle.input} keyboardType='default' onChangeText={text => getInputData('name', text)} placeholder='Class Name' />
                          {show && errorMessage.name ? <Text style={myStyle.errorMessage}>{errorMessage.name}</Text> : null}
                     </View>
-                    <View style={myStyle.inputDiv}>
-                         <TextInput multiline={true} numberOfLines={5} style={{...show && errorMessage.description ? myStyle.inputError : myStyle.input,height:130}} keyboardType='default' onChangeText={text => getInputData('description', text)} placeholder='Class Description' />
-                         {show && errorMessage.description ? <Text style={myStyle.errorMessage}>{errorMessage.description}</Text> : null}
-                    </View>
                     <TouchableOpacity style={myStyle.createButton} onPress={postData}>
-                         <Text style={myStyle.createButtonText}>Create</Text>
+                         <Text style={myStyle.createButtonText}>Join Class</Text>
                     </TouchableOpacity>
                </View>
           </ScrollView>

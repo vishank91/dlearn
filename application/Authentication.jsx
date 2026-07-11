@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import AuthenticationNavigation from "./navigation/AuthenticationNavigation"
 import AdminNavigation from "./navigation/AdminNavigation"
 import TeacherNavigation from "./navigation/TeacherNavigation"
-import { Alert } from 'react-native'
+import StudentNavigation from "./navigation/StudentNavigation"
 
 export default function Authentication() {
      let UserAuthData = useSelector(state => state.UserAuthData)
@@ -13,7 +13,7 @@ export default function Authentication() {
           <NavigationContainer>
                {
                     UserAuthData.isLogin ?
-                         UserAuthData.role === "Teacher" ? <TeacherNavigation /> : <AdminNavigation /> :
+                         UserAuthData.role === "Teacher" ? <TeacherNavigation /> : UserAuthData.role === "Student" ? <StudentNavigation /> : <AdminNavigation /> :
                          <AuthenticationNavigation />
                }
           </NavigationContainer>
