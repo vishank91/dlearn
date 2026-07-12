@@ -17,6 +17,7 @@ schema
 export default function FormValidator(name, value) {
      switch (name) {
           case "name":
+          case "classId":
           case "username":
                if (!value || value.length === 0)
                     return name + " Field is Mendatory"

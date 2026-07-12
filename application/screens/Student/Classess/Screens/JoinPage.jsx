@@ -91,17 +91,27 @@ export default function JoinPage({ navigation }) {
                setShow(true)
           else {
                let item = ClassStateData.find((x) => x.id === data.classId)
-               let studentId = await Storage.getItem("userid")
-               let record = {
-                    student: studentId,
-                    status: "Pending"
-               }
                if (item) {
-                    dispatch(updateClass({
-                         ...item,
-                         student: Object.hasOwn(item, 'student') ? item.student.push(record) : [{ ...record }]
-                    }))
-                    navigation.navigate("home")
+                    let studentId = await Storage.getItem("userid")
+                    if (item.student?.find(x => x.student === studentId)) {
+                         if (item.student?.find(x => x.student === studentId).status === "Pending")
+                              Alert.alert("Error", "Your Class Joining Request is Pending, Please Contact To Class Teacher")
+                         else
+                              Alert.alert("Error", "You Have Already Joined The Class")
+                    }
+                    else {
+                         let record = {
+                              student: studentId,
+                              status: "Pending"
+                         }
+                         let student = Object.hasOwn(item, 'student') ? item.student : []
+                         student.push(record)
+                         dispatch(updateClass({
+                              ...item,
+                              student: student
+                         }))
+                         navigation.navigate("home")
+                    }
                }
                else
                     Alert.alert("Error", "Class Doesn't Exist, Please Enter Correct Class ID")
@@ -115,8 +125,8 @@ export default function JoinPage({ navigation }) {
                </TouchableOpacity>
                <View style={myStyle.second}>
                     <View style={myStyle.inputDiv}>
-                         <TextInput style={show && errorMessage.name ? myStyle.inputError : myStyle.input} keyboardType='default' onChangeText={text => getInputData('name', text)} placeholder='Class Name' />
-                         {show && errorMessage.name ? <Text style={myStyle.errorMessage}>{errorMessage.name}</Text> : null}
+                         <TextInput style={show && errorMessage.classId ? myStyle.inputError : myStyle.input} keyboardType='default' onChangeText={text => getInputData('classId', text)} placeholder='Enter Class Id to Join Class' />
+                         {show && errorMessage.classId ? <Text style={myStyle.errorMessage}>{errorMessage.classId}</Text> : null}
                     </View>
                     <TouchableOpacity style={myStyle.createButton} onPress={postData}>
                          <Text style={myStyle.createButtonText}>Join Class</Text>

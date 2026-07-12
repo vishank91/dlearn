@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import {  ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Storage from "@react-native-async-storage/async-storage";
-import { Trash, Eye, PenBox } from "lucide-react-native"
+import { Eye } from "lucide-react-native"
 
-import { getClass, deleteClass } from "../../../../redux/ActionCreators/ClassActionCreators"
+import { getClass } from "../../../../redux/ActionCreators/ClassActionCreators"
 
 const myStyle = {
      mainButton: {
@@ -15,13 +15,6 @@ const myStyle = {
      mainButtonText: {
           color: "white",
           textAlign: "center",
-     },
-     mainText: {
-          fontSize: 25,
-          backgroundColor: "gray",
-          textAlign: "center",
-          color: "white",
-          padding: 20
      },
      parentDiv: {
           padding: 10,
@@ -62,9 +55,18 @@ const myStyle = {
           textAlign: "center",
           marginLeft: 5
      },
+     statusMessage:{
+          fontSize: 16,
+          padding: 5,
+          width: "100%",
+          textAlign: "center",
+          backgroundColor:"red",
+          color:"white"
+     }
 }
 export default function HomePage({ navigation }) {
      let [data, setData] = useState([])
+     let [studentId,setStudentId] = useState('')
 
      let dispatch = useDispatch()
      let ClassStateData = useSelector(state => state.ClassStateData)
@@ -74,7 +76,8 @@ export default function HomePage({ navigation }) {
                dispatch(getClass())
                if (ClassStateData.length) {
                     let studentId = await Storage.getItem('userid')
-                    setData(ClassStateData.filter((x) => x.student?.include(studentId)))
+                    setStudentId(studentId)
+                    setData(ClassStateData.filter((x) => x.student?.find(s=>s.student===studentId)))
                }
           })()
      }, [ClassStateData.length])
@@ -99,10 +102,13 @@ export default function HomePage({ navigation }) {
                                    <Text style={myStyle.text2}>{item.description}</Text>
                               </View>
                               <View style={myStyle.buttonDiv}>
+                                   {item.student.find(x=>x.student===studentId && x.status==="Approved")?
                                    <TouchableOpacity style={{ ...myStyle.button, backgroundColor: "green" }}>
                                         <Eye size={20} color={"white"} />
                                         <Text style={{ ...myStyle.buttonText }}>View Class</Text>
-                                   </TouchableOpacity>
+                                   </TouchableOpacity>:
+                                   <Text style={myStyle.statusMessage}>Your Request Status is : {item.student?.find(x=>x.student===studentId).status}</Text>
+                                   }
                               </View>
                          </View>
                     })}
