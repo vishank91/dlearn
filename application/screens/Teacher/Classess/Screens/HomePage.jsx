@@ -115,7 +115,7 @@ export default function HomePage({ navigation }) {
                                    <Text style={myStyle.text2}>{item.description}</Text>
                               </View>
                               <View style={myStyle.buttonDiv}>
-                                   <TouchableOpacity style={{ ...myStyle.button, backgroundColor: "green" }}>
+                                   <TouchableOpacity style={{ ...myStyle.button, backgroundColor: "green" }}  onPress={() => navigation.navigate("show", { id: item.id })}>
                                         <Eye size={20} color={"white"} />
                                         <Text style={{ ...myStyle.buttonText }}>View Class</Text>
                                    </TouchableOpacity>
