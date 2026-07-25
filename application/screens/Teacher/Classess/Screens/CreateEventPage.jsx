@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { ScrollView, View, Text, TextInput, TouchableOpacity } from "react-native"
-
-import Storage from "@react-native-async-storage/async-storage";
+import {
+     RichEditor,
+     RichToolbar,
+     actions
+} from 'react-native-pell-rich-editor';
 
 import { Picker } from '@react-native-picker/picker'
 
 import { useDispatch, useSelector } from 'react-redux'
 import FormValidator from "../../../../Validators/FormValidator"
 import { getClass } from "../../../../redux/ActionCreators/ClassActionCreators"
-import { getEvent, createEvent } from "../../../../redux/ActionCreators/EventActionCreators"
+import { createEvent } from "../../../../redux/ActionCreators/EventActionCreators"
 const myStyle = {
      mainButton: {
           backgroundColor: "#0055a5",
@@ -70,14 +73,16 @@ const myStyle = {
 }
 export default function CreateEventPage({ navigation, route }) {
      let { id } = route.params
+
+     let richText = useRef();
+     let [html, setHtml] = useState('');
+
      let [data, setData] = useState({
           type: "Notes",
           name: "",
-          description: ""
      })
      let [errorMessage, setErrorMessage] = useState({
-          name: "Name Field is Mendatory",
-          description: "Description Field is Mendatory"
+          name: "Name Field is Mendatory"
      })
      let [show, setShow] = useState(false)
 
@@ -101,10 +106,14 @@ export default function CreateEventPage({ navigation, route }) {
           let error = Object.values(errorMessage).find(x => x !== "")
           if (error)
                setShow(true)
+          else if(html===""){
+               setShow(true)
+               setErrorMessage({...errorMessage,description:"Please Enter Description"})
+          }
           else {
                dispatch(createEvent({
                     name: data.name,
-                    description: data.description,
+                    description: html,
                     type: data.type,
                     class: id,
                     status: true
@@ -132,7 +141,29 @@ export default function CreateEventPage({ navigation, route }) {
                          </Picker>
                     </View>
                     <View style={myStyle.inputDiv}>
-                         <TextInput multiline={true} style={{ ...show && errorMessage.description ? myStyle.inputError : myStyle.input, height: 300 }} keyboardType='default' onChangeText={text => getInputData('description', text)} placeholder='Event Description' />
+                         <RichToolbar
+                              editor={richText}
+                              actions={[
+                                   actions.setBold,
+                                   actions.setItalic,
+                                   actions.setUnderline,
+                                   actions.insertBulletsList,
+                                   actions.insertOrderedList,
+                                   actions.heading1,
+                                   actions.heading2,
+                                   actions.insertLink,
+                                   actions.undo,
+                                   actions.redo,
+                              ]}
+                         />
+                         <RichEditor
+                              ref={richText}
+                              placeholder="Pleasr Write Here..."
+                              initialHeight={250}
+                              onChange={(descriptionText) => {
+                                   setHtml(descriptionText);
+                              }}
+                         />
                          {show && errorMessage.description ? <Text style={myStyle.errorMessage}>{errorMessage.description}</Text> : null}
                     </View>
                     <TouchableOpacity style={myStyle.createButton} onPress={postData}>

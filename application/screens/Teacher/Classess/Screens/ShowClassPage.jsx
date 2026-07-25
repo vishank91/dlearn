@@ -3,6 +3,7 @@ import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { PenBox, Trash } from "lucide-react-native"
+import RenderHTML from 'react-native-render-html';
 
 import { getClass, deleteClass, updateClass } from "../../../../redux/ActionCreators/ClassActionCreators"
 import { getUser } from "../../../../redux/ActionCreators/UserActionCreators"
@@ -27,15 +28,7 @@ const myStyle = {
           padding: 10,
           marginBottom: 20
      },
-     mainDiv: {
-          flex: 1,
-          flexDirection: "row",
-     },
-     text1: {
-          fontSize: 14,
-          width: "30%",
-          textAlign: "left",
-     },
+
      text2: {
           fontSize: 14,
           padding: 5,
@@ -61,6 +54,30 @@ const myStyle = {
           color: "white",
           textAlign: "center",
           marginLeft: 5
+     },
+     contentDiv: {
+          padding: 20
+     },
+     contentText1: {
+          fontSize: 25,
+          textAlign: "center",
+     },
+     contentText2: {
+          fontSize: 20,
+          textAlign: "center",
+          borderBottomWidth: 5,
+          borderBottomColor: "gray",
+          marginBottom: 10
+     },
+     contentText3: {
+          fontSize: 16,
+          textAlign: "justify",
+          padding: 20,
+          marginBottom: 10
+     },
+     bottomButtonDiv: {
+          flex: 1,
+          flexDirection: "row"
      },
 }
 export default function ShowClassPage({ navigation, route }) {
@@ -178,11 +195,14 @@ export default function ShowClassPage({ navigation, route }) {
 
                     <ScrollView>
                          {eventData.length && eventData?.map(item => {
-                              return <View key={item.id}>
-                                   <Text>{item.name}</Text>
-                                   <Text>{item.type}</Text>
-                                   <Text>{item.description}</Text>
-                                   <View>
+                              return <View key={item.id} style={myStyle.contentDiv}>
+                                   <Text style={myStyle.contentText1}>{item.name}</Text>
+                                   <Text style={myStyle.contentText2}>({item.type})</Text>
+                                   <RenderHTML
+                                        contentWidth={"100%"}
+                                        source={{ html: item.description }}
+                                   />
+                                   <View style={myStyle.bottomButtonDiv}>
                                         <TouchableOpacity onPress={() => navigation.navigate("update-event", { id: item.id })} style={{ ...myStyle.button, backgroundColor: "green" }}>
                                              <PenBox size={20} color={"white"} />
                                              <Text style={{ ...myStyle.buttonText }}>Update</Text>
