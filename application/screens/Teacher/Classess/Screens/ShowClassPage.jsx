@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { PenBox, Trash } from "lucide-react-native"
 import RenderHTML from 'react-native-render-html';
 
-import { getClass, deleteClass, updateClass } from "../../../../redux/ActionCreators/ClassActionCreators"
+import { getClass, updateClass } from "../../../../redux/ActionCreators/ClassActionCreators"
 import { getUser } from "../../../../redux/ActionCreators/UserActionCreators"
 import { getEvent, deleteEvent } from "../../../../redux/ActionCreators/EventActionCreators"
 const myStyle = {
@@ -77,7 +77,8 @@ const myStyle = {
      },
      bottomButtonDiv: {
           flex: 1,
-          flexDirection: "row"
+          flexDirection: "row",
+          marginTop:20
      },
 }
 export default function ShowClassPage({ navigation, route }) {
@@ -194,14 +195,17 @@ export default function ShowClassPage({ navigation, route }) {
                     </View>
 
                     <ScrollView>
-                         {eventData.length && eventData?.map(item => {
-                              return <View key={item.id} style={myStyle.contentDiv}>
+                         {eventData.length && eventData?.map((item,index) => {
+                              return <View key={index} style={myStyle.contentDiv}>
                                    <Text style={myStyle.contentText1}>{item.name}</Text>
                                    <Text style={myStyle.contentText2}>({item.type})</Text>
-                                   <RenderHTML
+                                   <Text>
+                                        <RenderHTML
                                         contentWidth={"100%"}
+                                        style={{padding:20}}
                                         source={{ html: item.description }}
                                    />
+                                   </Text>
                                    <View style={myStyle.bottomButtonDiv}>
                                         <TouchableOpacity onPress={() => navigation.navigate("update-event", { id: item.id })} style={{ ...myStyle.button, backgroundColor: "green" }}>
                                              <PenBox size={20} color={"white"} />

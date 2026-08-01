@@ -6,11 +6,13 @@ const RootNavigation = createNativeStackNavigator()
 
 import HomePage from "./Screens/HomePage"
 import JoinPage from "./Screens/JoinPage"
+import ShowClassPage from "./Screens/ShowClassPage"
 export default function AdminTeacherHomePage() {
     return (
         <RootNavigation.Navigator>
             <RootNavigation.Screen name='home' component={HomePage} options={{ headerShown: false }} />
             <RootNavigation.Screen name='join' component={JoinPage} options={{ headerShown: false }} />
+            <RootNavigation.Screen name='show' component={ShowClassPage} options={{ headerShown: false }} />
         </RootNavigation.Navigator>
     )
 }
