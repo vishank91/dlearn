@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { House, LogOut, Warehouse, UserRoundPen,Presentation, UserStar, UsersRoundIcon, } from "lucide-react-native"
-import Storage from '@react-native-async-storage/async-storage'
+import React from 'react'
+import { House, LogOut, Warehouse, Presentation } from "lucide-react-native"
 
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -20,20 +19,14 @@ function TeacherTabs() {
                tabBarIcon: ({ color, size }) => {
                     if (route.name === "Home")
                          return <House color={color} size={size} />
-                    if (route.name === "Teacher")
+                    if (route.name === "Class")
                          return <Presentation color={color} size={size} />
-                    //  if (route.name === "Student")
-                    //      return <UserStar color={color} size={size} />
-                    //  if (role==="Super Admin" && route.name === "User")
-                    //      return <UsersRoundIcon color={color} size={size} />
-                    //  if (route.name === "Logout")
-                    //      return <LogOut color={color} size={size} />
+                    if (route.name === "Logout")
+                         return <LogOut color={color} size={size} />
                }
           })}>
                <TabNavigation.Screen name='Home' component={TeacherHomePage} />
                <TabNavigation.Screen name='Class' component={TeacherClassHomePage} />
-               {/* <TabNavigation.Screen name='Student' component={AdminStudentHomePage} />
-            <TabNavigation.Screen name='User' component={AdminUserHomePage} /> */}
                <TabNavigation.Screen name='Logout' component={LogoutPage} />
           </TabNavigation.Navigator>
      )
@@ -51,12 +44,6 @@ export default function TeacherNavigation() {
                <DrawerNavigation.Screen name="Class" component={TeacherClassHomePage} options={{
                     drawerIcon: ({ color, size }) => <Presentation color={color} size={size} />
                }} />
-               {/* <DrawerNavigation.Screen name="Student" component={AdminStudentHomePage} options={{
-                    drawerIcon: ({ color, size }) => <UserStar color={color} size={size} />
-               }} />
-               <DrawerNavigation.Screen name="User" component={AdminUserHomePage} options={{
-                    drawerIcon: ({ color, size }) => <UsersRoundIcon color={color} size={size} />
-               }} /> */}
                <DrawerNavigation.Screen name="Logout" component={LogoutPage} options={{
                     drawerIcon: ({ color, size }) => <LogOut color={color} size={size} />
                }} />
